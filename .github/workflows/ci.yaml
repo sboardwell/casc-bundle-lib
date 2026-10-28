@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+
+      - name: Install helm-unittest plugin
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest
+
+      - name: Lint library chart
+        run: helm lint charts/casc-bundle-lib
+
+      - name: Package library chart into example chart dependency directory
+        run: |
+          mkdir -p examples/chart/casc-bundle/charts
+          helm package charts/casc-bundle-lib -d examples/chart/casc-bundle/charts/
+
+      - name: Lint example chart
+        run: helm lint examples/chart/casc-bundle -f examples/chart/values-oc.yaml
+
+      - name: Run unit tests
+        run: helm unittest examples/chart/casc-bundle

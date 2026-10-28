@@ -1,0 +1,9 @@
+suite: OC bundle — happy path
+templates:
+  - templates/configmap.yaml
+tests:
+  - it: renders the full OC bundle snapshot
+    values:
+      - ../../values-oc.yaml
+    asserts:
+      - matchSnapshot: {}

@@ -1,0 +1,19 @@
+bundleRevision: "1"
+bundleDescription: "Managed controller bundle"
+
+templateVars: {}
+
+sections:
+  plugins:
+    - content/plugins/plugins-mc.yaml
+  items:
+    - template: content/items/team-folder.yaml
+      target: items-platform.yaml
+      templateVars:
+        teamKey: "platform"
+        teamDisplayName: "Platform"
+    - template: content/items/team-folder.yaml
+      target: items-card-banking.yaml
+      templateVars:
+        teamKey: "card-banking"
+        teamDisplayName: "Card Banking"

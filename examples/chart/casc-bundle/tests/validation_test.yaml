@@ -1,0 +1,87 @@
+suite: Validation — error cases
+templates:
+  - templates/configmap.yaml
+tests:
+  - it: fails when bundleRevision is missing
+    set:
+      sections:
+        jcasc:
+          - content/jcasc/*.yaml
+    asserts:
+      - failedTemplate:
+          errorMessage: "bundleRevision must be set"
+
+  - it: fails on unknown section name
+    set:
+      bundleRevision: "1"
+      sections:
+        badSection:
+          - content/jcasc/*.yaml
+    asserts:
+      - failedTemplate:
+          errorMessage: 'unknown bundle section "badSection" — valid: jcasc, plugins, catalog, rbac, items, variables'
+
+  - it: fails when a template dict entry targets bundle.yaml
+    set:
+      bundleRevision: "1"
+      sections:
+        jcasc:
+          - template: content/jcasc/jenkins.yaml
+            target: bundle.yaml
+    asserts:
+      - failedTemplate:
+          errorMessage: "content file cannot be named bundle.yaml (reserved for the bundle manifest)"
+
+  - it: fails on duplicate output filename — glob vs glob
+    set:
+      bundleRevision: "1"
+      sections:
+        jcasc:
+          - content/jcasc/*.yaml
+          - content/jcasc/*.yaml
+    asserts:
+      - failedTemplate:
+          errorMessage: 'duplicate filename "jenkins.yaml": found at content/jcasc/jenkins.yaml and content/jcasc/jenkins.yaml'
+
+  - it: fails on duplicate output filename — glob vs template dict
+    set:
+      bundleRevision: "1"
+      sections:
+        jcasc:
+          - content/jcasc/*.yaml
+          - template: content/jcasc/jenkins.yaml
+            target: jenkins.yaml
+    asserts:
+      - failedTemplate:
+          errorMessage: 'duplicate filename "jenkins.yaml"'
+
+  - it: fails on duplicate output filename — template dict vs template dict
+    set:
+      bundleRevision: "1"
+      sections:
+        items:
+          - template: content/items/team-folder.yaml
+            target: items-platform.yaml
+            templateVars:
+              teamKey: "platform"
+              teamDisplayName: "Platform"
+          - template: content/items/team-folder.yaml
+            target: items-platform.yaml
+            templateVars:
+              teamKey: "platform-2"
+              teamDisplayName: "Platform 2"
+    asserts:
+      - failedTemplate:
+          errorMessage: 'duplicate filename "items-platform.yaml"'
+
+  - it: fails when a template dict entry has no template field
+    set:
+      bundleRevision: "1"
+      sections:
+        items:
+          - target: some-output.yaml
+            templateVars:
+              teamKey: "x"
+    asserts:
+      - failedTemplate:
+          errorMessage: "section entry must have a 'template' field"

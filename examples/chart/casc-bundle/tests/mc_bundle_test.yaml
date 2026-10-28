@@ -1,0 +1,9 @@
+suite: MC bundle — happy path
+templates:
+  - templates/configmap.yaml
+tests:
+  - it: renders the full MC bundle snapshot
+    values:
+      - ../../values-mc.yaml
+    asserts:
+      - matchSnapshot: {}

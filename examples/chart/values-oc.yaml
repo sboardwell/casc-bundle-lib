@@ -1,0 +1,10 @@
+bundleRevision: "1"
+bundleDescription: "Operations Center bundle"
+
+templateVars: {}
+
+sections:
+  jcasc:
+    - content/jcasc/*.yaml
+  plugins:
+    - content/plugins/plugins-oc.yaml

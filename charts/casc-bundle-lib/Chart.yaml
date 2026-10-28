@@ -1,0 +1,6 @@
+apiVersion: v2
+name: casc-bundle-lib
+description: Library chart providing CloudBees CI CasC bundle rendering logic
+icon: https://fontawesome.com/icons/classic/solid/toolbox
+type: library
+version: 0.1.0

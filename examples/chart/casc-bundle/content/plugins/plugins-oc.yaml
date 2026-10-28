@@ -1,0 +1,4 @@
+plugins:
+  - id: cloudbees-casc-server
+  - id: operations-center-cloud
+  - id: operations-center-rbac

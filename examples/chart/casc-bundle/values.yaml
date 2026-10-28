@@ -1,0 +1,44 @@
+# bundleId defaults to .Release.Name when left empty.
+bundleId: ""
+
+bundleDescription: ""
+
+# bundleRevision is required — bump it to trigger a bundle reload in CloudBees CI.
+bundleRevision: ""
+
+# templateVars are injected as top-level variables into every templated content
+# file. All glob-matched files and template-dict entries can reference these.
+# Example:
+#   templateVars:
+#     gitlabUrl: "https://gitlab.example.com"
+#     licenseKey: "${CI_LICENSE_KEY}"
+templateVars: {}
+
+# sections maps CasC bundle section names to lists of content entries.
+# Valid section names (rendered in this order):
+#   jcasc, plugins, catalog, rbac, items, variables
+#
+# Two entry forms are supported:
+#
+# 1. Glob string — every matched file is rendered with global templateVars:
+#      sections:
+#        jcasc:
+#          - content/jcasc/*.yaml
+#
+# 2. Template dict — renders a single file, with per-entry templateVars merged
+#    on top of (and overriding) global templateVars. Use target to disambiguate
+#    when the same template is reused across multiple entries (all output
+#    filenames across every section must be globally unique):
+#      sections:
+#        items:
+#          - template: content/items/team-folder.yaml
+#            target: items-platform.yaml
+#            templateVars:
+#              teamKey: "platform"
+#              teamDisplayName: "Platform"
+#          - template: content/items/team-folder.yaml
+#            target: items-card-banking.yaml
+#            templateVars:
+#              teamKey: "card-banking"
+#              teamDisplayName: "Card Banking"
+sections: {}

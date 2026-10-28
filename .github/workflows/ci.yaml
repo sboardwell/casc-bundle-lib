@@ -18,6 +18,9 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Verify actions lock is up to date
+        run: gh actions-lock --verify
+
       - name: Install Helm
         uses: azure/setup-helm@v4.3.1
 

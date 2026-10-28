@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      checks: write
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4.4.0
@@ -45,9 +47,8 @@ jobs:
             --file 'tests/*.yaml' \
             examples/chart/casc-bundle
 
-      - name: Upload test results
-        uses: actions/upload-artifact@v4.6.2
+      - name: Publish test results
+        uses: mikepenz/action-junit-report@v6.6.1
         if: always()
         with:
-          name: junit-test-results
-          path: junit.xml
+          report_paths: '**/junit.xml'

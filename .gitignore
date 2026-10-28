@@ -4,3 +4,6 @@ examples/chart/casc-bundle/charts/
 
 # Extracted bundle files
 rendered/
+
+# CI test report
+junit.xml

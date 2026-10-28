@@ -177,7 +177,7 @@ The first run generates `tests/__snapshots__/` — commit those files. Subsequen
 CI uses Docker rather than the plugin to avoid verification issues and pin an exact version:
 
 ```bash
-docker run --rm -v $(pwd):/apps helmunittest/helm-unittest:3.11.1-0.3.0 \
+docker run --rm -v $(pwd):/apps helmunittest/helm-unittest:4.3.0-1.2.0 \
   --output-type junit \
   --output-file junit.xml \
   --strict \

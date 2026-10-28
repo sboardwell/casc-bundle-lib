@@ -19,7 +19,7 @@ tests:
           - content/jcasc/*.yaml
     asserts:
       - failedTemplate:
-          errorMessage: 'unknown bundle section "badSection" — valid: jcasc, plugins, catalog, rbac, items, variables'
+          errorMessage: '"badSection" is not a valid bundle section — valid sections are jcasc, plugins, catalog, rbac, items, variables'
 
   - it: fails when a template dict entry targets bundle.yaml
     set:
@@ -41,7 +41,7 @@ tests:
           - content/jcasc/*.yaml
     asserts:
       - failedTemplate:
-          errorMessage: 'duplicate filename "jenkins.yaml": found at content/jcasc/jenkins.yaml and content/jcasc/jenkins.yaml'
+          errorMessage: 'duplicate filename "jenkins.yaml" found at content/jcasc/jenkins.yaml and content/jcasc/jenkins.yaml'
 
   - it: fails on duplicate output filename — glob vs template dict
     set:

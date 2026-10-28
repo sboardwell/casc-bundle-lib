@@ -11,12 +11,16 @@ $.Files resolves against the consumer chart's own content/ directory.
 {{- /* Validate user-supplied section names */}}
 {{- range $section, $_ := .Values.sections }}
 {{- if not (has $section $knownSections) }}
-{{- fail (printf "unknown bundle section %q — valid: %s" $section (join ", " $knownSections)) }}
+{{- fail (printf "%q is not a valid bundle section — valid sections are %s" $section (join ", " $knownSections)) }}
 {{- end }}
 {{- end }}
 
-{{- /* Build the global tpl context: flat templateVars plus Files for partial includes */}}
-{{- $globalCtx := merge (dict "Files" $.Files) .Values.templateVars }}
+{{- /*
+  Build the global tpl context: flat templateVars plus Files and Template.
+  $.Template must be included alongside $.Files so that tpl can resolve
+  the chart base path when content files call .Files.Get for partials.
+*/}}
+{{- $globalCtx := merge (dict "Files" $.Files "Template" $.Template) .Values.templateVars }}
 
 {{- /* Duplicate output-name detection across all sections */}}
 {{- $seen := dict }}
@@ -29,7 +33,7 @@ $.Files resolves against the consumer chart's own content/ directory.
 {{- fail (printf "content file cannot be named bundle.yaml (reserved for the bundle manifest): %s" $path) }}
 {{- end }}
 {{- if hasKey $seen $base }}
-{{- fail (printf "duplicate filename %q: found at %s and %s" $base (index $seen $base) $path) }}
+{{- fail (printf "duplicate filename %q found at %s and %s" $base (index $seen $base) $path) }}
 {{- end }}
 {{- $_ := set $seen $base $path }}
 {{- end }}
@@ -89,7 +93,7 @@ data:
   {{- end }}
   {{- else }}
   {{- $target := $entry.target | default (base $entry.template) }}
-  {{- $entryCtx := merge (dict "Files" $.Files) ($entry.templateVars | default dict) $.Values.templateVars }}
+  {{- $entryCtx := merge (dict "Files" $.Files "Template" $.Template) ($entry.templateVars | default dict) $.Values.templateVars }}
   {{ $target }}: |
     {{- tpl ($.Files.Get $entry.template | toString) $entryCtx | nindent 4 }}
   {{- end }}

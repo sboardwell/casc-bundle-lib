@@ -145,28 +145,53 @@ If the partial itself contains Go template syntax, wrap it with `tpl`:
 ### Prerequisites
 
 - Helm ≥ 3.8
-- [helm-unittest](https://github.com/helm-unittest/helm-unittest) plugin
+- [helm-unittest](https://github.com/helm-unittest/helm-unittest) plugin (local only — CI uses Docker, see below)
+
+Install from a release tarball to avoid the verification prompt:
 
 ```bash
-helm plugin install https://github.com/helm-unittest/helm-unittest
+helm plugin install https://github.com/helm-unittest/helm-unittest/releases/download/v0.6.2/helm-unittest.tgz
 ```
 
-### Running tests
+### Running tests locally
 
-The test suite targets the example chart. Because the library is not yet published, package it locally first:
+The test suite targets the example chart. Because the library is not yet published to the OCI
+registry, `make examples/deps` packages it locally and drops the tarball into `charts/` — Helm
+uses it directly without contacting the registry.
 
 ```bash
-helm package charts/casc-bundle-lib -d examples/chart/casc-bundle/charts/
-helm unittest examples/chart/casc-bundle
+make examples/deps
+make examples/test        # runs: helm unittest examples/chart/casc-bundle
 ```
 
-The first run generates `tests/__snapshots/` — commit those files. Subsequent runs diff against them.
+Or with `make` as a one-liner (deps runs automatically as a prerequisite):
+
+```bash
+make examples/test
+```
+
+The first run generates `tests/__snapshots__/` — commit those files. Subsequent runs diff against them.
+
+### Running tests in CI
+
+CI uses Docker rather than the plugin to avoid verification issues and pin an exact version:
+
+```bash
+docker run --rm -v $(pwd):/apps helmunittest/helm-unittest:3.11.1-0.3.0 \
+  --output-type junit \
+  --output-file junit.xml \
+  --strict \
+  --file 'tests/*.yaml' \
+  examples/chart/casc-bundle
+```
+
+Test results are published to the GitHub Actions summary via `mikepenz/action-junit-report`.
 
 ### Linting
 
 ```bash
-helm lint charts/casc-bundle-lib
-helm lint examples/chart/casc-bundle -f examples/chart/values-oc.yaml
+make lint           # library chart only
+make examples/lint  # example chart against both values files
 ```
 
 ## Releasing

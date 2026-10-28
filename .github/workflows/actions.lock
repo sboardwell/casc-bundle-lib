@@ -5,8 +5,8 @@ version: 'v0.0.3'
 workflows:
     '.github/workflows/ci.yaml':
         - 'actions/checkout@v4.4.0'
+        - 'actions/upload-artifact@v4.6.2'
         - 'azure/setup-helm@v4.3.1'
-        - 'mikepenz/action-junit-report@v3.8.0'
     '.github/workflows/release.yaml':
         - 'actions/checkout@v4.4.0'
         - 'azure/setup-helm@v4.3.1'
@@ -16,13 +16,13 @@ dependencies:
         commit: 'sha1-11d5960a326750d5838078e36cf38b85af677262'
         owner_id: 44036562
         repo_id: 197814629
+    'actions/upload-artifact@v4.6.2':
+        ref: 'v4.6.2'
+        commit: 'sha1-ea165f8d65b6e75b540449e92b4886f43607fa02'
+        owner_id: 44036562
+        repo_id: 192625955
     'azure/setup-helm@v4.3.1':
         ref: 'v4.3.1'
         commit: 'sha1-1a275c3b69536ee54be43f2070a358922e12c8d4'
         owner_id: 6844498
         repo_id: 210310251
-    'mikepenz/action-junit-report@v3.8.0':
-        ref: 'v3.8.0'
-        commit: 'sha1-150e2f992e4fad1379da2056d1d1c279f520e058'
-        owner_id: 1476232
-        repo_id: 330384746

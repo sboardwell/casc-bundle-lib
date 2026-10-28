@@ -34,7 +34,7 @@ jobs:
 
       - name: Run unit tests
         run: |
-          docker run --rm -v $(pwd):/apps helmunittest/helm-unittest:4.3.0-1.2.0 \
+          docker run --rm -v $(pwd):/apps --user $(id -u):$(id -g) helmunittest/helm-unittest:4.3.0-1.2.0 \
             --output-type junit \
             --output-file /apps/junit.xml \
             --strict \

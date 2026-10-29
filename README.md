@@ -11,21 +11,24 @@ charts/casc-bundle-lib/       # the library chart (type: library)
   Chart.yaml
   templates/
     _casc_bundle.tpl          # all rendering logic, exported as casc-bundle.configmap
+charts/casc-bundle-lib-test-consumer/  # internal test consumer (never published)
+  tests/                     # helm-unittest test suite (validation + snapshots)
 examples/
-  chart/casc-bundle/          # single example consumer chart — copy this as a starting point
+  casc-bundle/               # example consumer chart — copy this as a starting point
     Chart.yaml
     templates/
-      configmap.yaml          # {{- include "casc-bundle.configmap" . }}
+      configmap.yaml         # {{- include "casc-bundle.configmap" . }}
     content/
-      jcasc/jenkins.yaml
+      jcasc/common/jenkins.yaml
+      jcasc/oc/casc-oc.yaml
       plugins/plugins-oc.yaml
       plugins/plugins-mc.yaml
+      partials/plugins-base.yaml
       items/team-folder.yaml
-    tests/                    # helm-unittest test suite
-    values.yaml               # commented skeleton
-  values-oc.yaml              # Operations Center variant
-  values-mc.yaml              # Managed controller variant
-  README.md                   # examples walkthrough
+    values.yaml              # commented skeleton
+  services/oc/values.yaml    # Operations Center variant
+  services/mc/values.yaml    # Managed controller variant
+  README.md                  # examples walkthrough
 ```
 
 ## Using the library
@@ -155,22 +158,16 @@ helm plugin install https://github.com/helm-unittest/helm-unittest/releases/down
 
 ### Running tests locally
 
-The test suite targets the example chart. Because the library is not yet published to the OCI
-registry, `make examples/deps` packages it locally and drops the tarball into `charts/` — Helm
-uses it directly without contacting the registry.
+The test suite lives in `charts/casc-bundle-lib-test-consumer/`. `make test` syncs the
+local library into its `charts/` directory and runs helm-unittest in one step:
 
 ```bash
-make examples/deps
-make examples/test        # runs: helm unittest examples/chart/casc-bundle
+make test
 ```
 
-Or with `make` as a one-liner (deps runs automatically as a prerequisite):
-
-```bash
-make examples/test
-```
-
-The first run generates `tests/__snapshots__/` — commit those files. Subsequent runs diff against them.
+`make test/deps` runs the sync alone (useful after editing the library before a manual
+`helm template` check). Snapshot files under `tests/__snapshot__/` are committed — the
+first run after a rendering change will update them; commit the result.
 
 ### Running tests in CI
 
@@ -182,7 +179,7 @@ docker run --rm -v $(pwd):/apps helmunittest/helm-unittest:4.3.0-1.2.0 \
   --output-file junit.xml \
   --strict \
   --file 'tests/*.yaml' \
-  examples/chart/casc-bundle
+  charts/casc-bundle-lib-test-consumer
 ```
 
 Test results are published to the GitHub Actions summary via `mikepenz/action-junit-report`.
@@ -191,7 +188,7 @@ Test results are published to the GitHub Actions summary via `mikepenz/action-ju
 
 ```bash
 make lint           # library chart only
-make examples/lint  # example chart against both values files
+make -C examples lint/oc lint/mc  # example chart against both values files
 ```
 
 ## Releasing

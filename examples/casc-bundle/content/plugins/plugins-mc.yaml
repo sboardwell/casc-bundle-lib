@@ -1,0 +1,3 @@
+plugins:
+  {{- .Files.Get "content/partials/plugins-base.yaml" | trim | nindent 2 }}
+  - id: cloudbees-rbac-plugin

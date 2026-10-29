@@ -1,0 +1,13 @@
+removeStrategy:
+  items: NONE
+
+items:
+- kind: folder
+  name: {{ .teamKey }}
+  displayName: {{ .teamDisplayName | quote }}
+  description: {{ printf "Folder for %s team" .teamDisplayName | quote }}
+  items:
+  - kind: pipeline
+    name: {{ .teamKey }}-build
+    displayName: {{ printf "%s build" .teamDisplayName | quote }}
+    description: {{ printf "Main build pipeline for %s" .teamDisplayName | quote }}

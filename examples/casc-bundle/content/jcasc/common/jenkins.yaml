@@ -1,0 +1,15 @@
+jenkins:
+  systemMessage: {{ .systemMessage | default "CloudBees CI" | quote }}
+  numExecutors: 0
+  mode: EXCLUSIVE
+  authorizationStrategy: "cloudBeesRoleBasedAccessControl"
+
+unclassified:
+  location:
+    adminAddress: "admin@example.com"
+  bundleUpdateTiming:
+    automaticReload: true
+    automaticRestart: false
+    rejectWarnings: true
+    reloadAlwaysOnRestart: true
+    skipNewVersions: false

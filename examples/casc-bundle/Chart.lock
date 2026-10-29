@@ -1,0 +1,6 @@
+dependencies:
+- name: casc-bundle-lib
+  repository: oci://ghcr.io/sboardwell/charts
+  version: 0.1.0
+digest: sha256:b694258e1dcb3a84c2416dcd7d1e1587c88fe90287e6e91d7350983225b6c7d3
+generated: "2026-10-28T22:50:32.169288+01:00"

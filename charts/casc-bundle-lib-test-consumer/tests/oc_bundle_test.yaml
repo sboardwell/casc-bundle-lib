@@ -4,6 +4,6 @@ templates:
 tests:
   - it: renders the full OC bundle snapshot
     values:
-      - ../../values-oc.yaml
+      - ../values-oc.yaml
     asserts:
       - matchSnapshot: {}

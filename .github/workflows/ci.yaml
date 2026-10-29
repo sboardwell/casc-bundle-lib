@@ -37,15 +37,10 @@ jobs:
       - name: Lint library chart
         run: helm lint charts/casc-bundle-lib
 
-      - name: Package library chart into example chart dependency directory
+      - name: Sync library into test-consumer charts/ directory
         run: |
-          mkdir -p examples/chart/casc-bundle/charts
-          helm package charts/casc-bundle-lib -d examples/chart/casc-bundle/charts/
-
-      - name: Lint example chart
-        run: |
-          helm lint examples/chart/casc-bundle -f examples/chart/values-oc.yaml
-          helm lint examples/chart/casc-bundle -f examples/chart/values-mc.yaml
+          mkdir -p charts/casc-bundle-lib-test-consumer/charts
+          cp -r charts/casc-bundle-lib charts/casc-bundle-lib-test-consumer/charts/casc-bundle-lib
 
       - name: Run unit tests
         run: |
@@ -58,7 +53,14 @@ jobs:
             --output-file /apps/junit.xml \
             --strict \
             --file 'tests/*.yaml' \
-            examples/chart/casc-bundle
+            charts/casc-bundle-lib-test-consumer
+
+      - name: Lint example chart
+        run: |
+          mkdir -p examples/casc-bundle/charts
+          helm package charts/casc-bundle-lib -d examples/casc-bundle/charts/
+          helm lint examples/casc-bundle -f examples/services/oc/values.yaml
+          helm lint examples/casc-bundle -f examples/services/mc/values.yaml
 
       - name: Publish test results
         uses: mikepenz/action-junit-report@v6.6.1

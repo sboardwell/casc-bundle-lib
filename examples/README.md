@@ -5,22 +5,25 @@ the two main CloudBees CI bundle types.
 
 ```
 examples/
-  chart/
-    casc-bundle/            # reusable consumer chart — copy this as your starting point
-      Chart.yaml            # declares casc-bundle-lib as a dependency
-      templates/
-        configmap.yaml      # one line: {{- include "casc-bundle.configmap" . }}
-      content/
-        jcasc/jenkins.yaml  # JCasC snippet (used by OC variant)
-        plugins/
-          plugins-oc.yaml   # OC plugin list
-          plugins-mc.yaml   # managed controller plugin list
-        items/
-          team-folder.yaml  # reusable team folder template
-      tests/                # helm-unittest test suite
-      values.yaml           # commented skeleton — start here when creating a new bundle
-    values-oc.yaml          # Operations Center variant
-    values-mc.yaml          # Managed controller variant (multi-team)
+  casc-bundle/              # reusable consumer chart — copy this as your starting point
+    Chart.yaml              # declares casc-bundle-lib as a dependency
+    templates/
+      configmap.yaml        # one line: {{- include "casc-bundle.configmap" . }}
+    content/
+      jcasc/
+        common/jenkins.yaml # JCasC shared across all bundle types
+        oc/casc-oc.yaml     # OC-only JCasC (cascAutoControllerProvisioning)
+      plugins/
+        plugins-oc.yaml     # OC plugin list (includes partial)
+        plugins-mc.yaml     # managed controller plugin list (includes partial)
+      partials/
+        plugins-base.yaml   # shared plugin entries included by both plugin files
+      items/
+        team-folder.yaml    # reusable team folder template (uses templateVars)
+    values.yaml             # commented skeleton — start here when creating a new bundle
+  services/
+    oc/values.yaml          # Operations Center variant
+    mc/values.yaml          # Managed controller variant (multi-team)
 ```
 
 ## Prerequisites
@@ -28,7 +31,7 @@ examples/
 Resolve the chart dependency before rendering:
 
 ```bash
-helm dependency update examples/chart/casc-bundle
+helm dependency update examples/casc-bundle
 ```
 
 ## Rendering the examples
@@ -36,13 +39,13 @@ helm dependency update examples/chart/casc-bundle
 **Operations Center bundle:**
 
 ```bash
-helm template oc examples/chart/casc-bundle -f examples/chart/values-oc.yaml
+helm template oc examples/casc-bundle -f examples/services/oc/values.yaml
 ```
 
 **Managed controller bundle:**
 
 ```bash
-helm template mc examples/chart/casc-bundle -f examples/chart/values-mc.yaml
+helm template mc examples/casc-bundle -f examples/services/mc/values.yaml
 ```
 
 ## How the values files work
@@ -109,7 +112,7 @@ work in both glob-matched files and template dict entries.
 
 ## Creating a new bundle
 
-1. Copy `examples/chart/casc-bundle/` to your own chart directory.
+1. Copy `examples/casc-bundle/` to your own chart directory.
 2. Add your content files under `content/`.
 3. Start from `values.yaml` (the commented skeleton) and fill in `sections`.
 4. Run `helm dependency update` then `helm template` to verify the output.

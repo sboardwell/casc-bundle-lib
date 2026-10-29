@@ -1,0 +1,12 @@
+bundleRevision: "1"
+bundleDescription: "Operations Center bundle"
+
+templateVars:
+  systemMessage: "CloudBees CI Operations Center"
+
+sections:
+  jcasc:
+    - content/jcasc/common/*.yaml
+    - content/jcasc/oc/*.yaml
+  plugins:
+    - content/plugins/plugins-oc.yaml

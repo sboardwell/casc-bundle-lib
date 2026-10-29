@@ -4,6 +4,6 @@ templates:
 tests:
   - it: renders the full MC bundle snapshot
     values:
-      - ../../values-mc.yaml
+      - ../values-mc.yaml
     asserts:
       - matchSnapshot: {}

@@ -1,0 +1,8 @@
+apiVersion: v2
+name: casc-bundle-lib-test-consumer
+description: Internal test consumer for casc-bundle-lib — not for production use
+type: application
+version: 0.1.0
+dependencies:
+  - name: casc-bundle-lib
+    version: "0.1.0"

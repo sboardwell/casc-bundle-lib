@@ -1,5 +1,7 @@
-# Helm dependency tarballs — populated by CI or helm dependency update
-examples/chart/casc-bundle/charts/
+# Helm dependencies — populated by make test/deps or make deps
+charts/casc-bundle-lib-test-consumer/charts/
+charts/casc-bundle-lib-test-consumer/Chart.lock
+examples/casc-bundle/charts/
 *.tgz
 
 # Extracted bundle files

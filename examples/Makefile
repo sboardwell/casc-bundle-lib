@@ -21,17 +21,17 @@ help: ## Show this help
 .PHONY: deps
 deps: ## Resolve chart dependencies from the published OCI registry
 	@mkdir -p $(CHARTS_DIR)
-	helm dependency update $(EXAMPLE_CHART) --skip-refresh
+	@[ -d $(EXAMPLE_CHART)/charts ] || helm dependency update $(EXAMPLE_CHART) --skip-refresh
 
-.PHONY: $(addprefix lint/,$(SERVICES))
+.PHONY: lint/%
 lint/%: deps ## Lint against services/%/values.yaml
-	helm lint $(EXAMPLE_CHART) -f services/$*/values.yaml
+	@helm lint $(EXAMPLE_CHART) -f services/$*/values.yaml
 
-.PHONY: $(addprefix render/,$(SERVICES))
+.PHONY: render/%
 render/%: deps ## Render with services/%/values.yaml
-	helm template $* $(EXAMPLE_CHART) -f services/$*/values.yaml
+	@helm template $* $(EXAMPLE_CHART) -f services/$*/values.yaml
 
-.PHONY: $(addprefix extract/,$(SERVICES))
+.PHONY: extract/%
 extract/%: deps ## Extract bundle files to rendered/%/
 	@$(call extract-bundle,$*,services/$*/values.yaml)
 
